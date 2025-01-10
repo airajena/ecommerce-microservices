@@ -22,10 +22,11 @@ public class ProductController {
         productService.createProduct(productRequest);
     }
 
-    @GetMapping
+    @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> getAllProducts() {
         return productService.getAllProducts();
     }
+
 
 }
