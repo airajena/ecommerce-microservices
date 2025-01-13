@@ -3,9 +3,9 @@ package com.microservices.order.service;
 import com.microservices.order.dto.OrderRequest;
 import com.microservices.order.model.Order;
 import com.microservices.order.repository.OrderRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 

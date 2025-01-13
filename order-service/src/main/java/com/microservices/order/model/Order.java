@@ -23,3 +23,4 @@ public class Order {
     private BigDecimal price;
     private Integer quantity;
 }
+
