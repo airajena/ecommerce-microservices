@@ -1,5 +1,6 @@
 package com.microservices.inventory.service;
 
+import com.microservices.inventory.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
