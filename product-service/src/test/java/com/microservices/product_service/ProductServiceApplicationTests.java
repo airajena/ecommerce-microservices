@@ -2,7 +2,6 @@ package com.microservices.product_service;
 
 import com.microservices.product_service.dto.ProductRequest;
 import io.restassured.RestAssured;
-import io.restassured.parsing.Parser;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,32 +12,44 @@ import org.testcontainers.containers.MongoDBContainer;
 
 import java.math.BigDecimal;
 
-import static io.restassured.RestAssured.given;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProductServiceApplicationTests {
+class ProductServiceApplicationTests {
+
+	@ServiceConnection
+	static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:7.0.5");
+	@LocalServerPort
+	private Integer port;
 
 	@BeforeEach
-	public void setup() {
-		RestAssured.defaultParser = Parser.JSON;
+	void setup() {
+		RestAssured.baseURI = "http://localhost";
+		RestAssured.port = port;
+	}
+
+	static {
+		mongoDBContainer.start();
 	}
 
 	@Test
-	public void shouldCreateProduct() {
-		String productRequest = """
-            {
-                "name": "Wireless Keyboard",
-                "description": "Ergonomic wireless keyboard",
-                "price": 49.99
-            }
-        """;
+	void shouldCreateProduct() throws Exception {
+		ProductRequest productRequest = getProductRequest();
 
-		given()
+		RestAssured.given()
 				.contentType("application/json")
 				.body(productRequest)
 				.when()
 				.post("/api/product")
 				.then()
-				.statusCode(201);
+				.log().all()
+				.statusCode(201)
+				.body("id", Matchers.notNullValue())
+				.body("name", Matchers.equalTo(productRequest.name()))
+				.body("description", Matchers.equalTo(productRequest.description()))
+				.body("price", Matchers.is(productRequest.price().intValueExact()));
 	}
+
+	private ProductRequest getProductRequest() {
+		return new ProductRequest("iPhone 13", "iPhone 13", BigDecimal.valueOf(1200));
+	}
+
 }
