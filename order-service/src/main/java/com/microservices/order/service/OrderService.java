@@ -1,5 +1,6 @@
 package com.microservices.order.service;
 
+import com.microservices.order.client.InventoryClient;
 import com.microservices.order.dto.OrderRequest;
 import com.microservices.order.model.Order;
 import com.microservices.order.repository.OrderRepository;
@@ -9,16 +10,23 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final InventoryClient inventoryClient;
 
     public void placeOrder(OrderRequest orderRequest) {
-        var order = mapToOrder(orderRequest);
-        orderRepository.save(order);
+        boolean inStock = inventoryClient.isInStock(orderRequest.skuCode(), orderRequest.quantity());
+        if (inStock) {
+            var order = mapToOrder(orderRequest);
+            orderRepository.save(order);
+        } else {
+            throw new RuntimeException("Product with Skucode " + orderRequest.skuCode() + "is not in stock");
+        }
     }
 
     private static Order mapToOrder(OrderRequest orderRequest) {
