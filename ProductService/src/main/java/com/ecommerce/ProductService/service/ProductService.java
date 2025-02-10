@@ -1,28 +1,9 @@
 package com.ecommerce.ProductService.service;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class ProductService {
+import com.ecommerce.ProductService.model.ProductRequest;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long productId;
+public interface ProductService {
+    long addProduct(ProductRequest productRequest);
 
-    @Column(name = "PRODUCT_NAME")
-    private String productName;
-
-    @Column(name = "PRICE")
-    private long price;
-
-    @Column(name = "QUANTITY")
-    private long quantity;
 }
