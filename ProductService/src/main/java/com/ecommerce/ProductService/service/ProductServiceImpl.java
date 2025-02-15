@@ -1,6 +1,7 @@
 package com.ecommerce.ProductService.service;
 
 import com.ecommerce.ProductService.entity.Product;
+import com.ecommerce.ProductService.exception.ProductServiceCustomException;
 import com.ecommerce.ProductService.model.ProductRequest;
 import com.ecommerce.ProductService.model.ProductResponse;
 import com.ecommerce.ProductService.repository.ProductRepository;
@@ -36,12 +37,16 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse getProductById(long productId) {
-        log.info("Fetching product for productId: {}", productId);
+        log.info("Get the product for productId: {}", productId);
 
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found for productId: " + productId));
+        Product product
+                = productRepository.findById(productId)
+                .orElseThrow(
+                        () -> new ProductServiceCustomException("Product with given id not found","PRODUCT_NOT_FOUND"));
 
-        ProductResponse productResponse = new ProductResponse();
+        ProductResponse productResponse
+                = new ProductResponse();
+
         BeanUtils.copyProperties(product, productResponse);
 
         return productResponse;
