@@ -26,4 +26,6 @@ public class ProductController {
         long productId = productService.addProduct(productRequest);
         return new ResponseEntity<>(productId, HttpStatus.CREATED);
     }
+
+
 }
