@@ -8,7 +8,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/airajena/application-config
+          uri: https://github.com/airajena/ecommerce-microservices-app-config
           clone-on-start: true
 
 
